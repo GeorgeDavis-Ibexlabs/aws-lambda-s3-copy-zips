@@ -1,0 +1,47 @@
+{
+    "srcBucket": [
+        {
+            "us-east-1": [
+                {
+                    "s3bucket": "us-east-1.example.s3-bucket",
+                    "objects": [
+                        {
+                            "s3prefix": "folder_name/git_branch_name/",
+                            "filename": "lambda.zip"
+                        }
+                    ]
+                }
+            ]
+        }       
+    ],
+    "dstBucket": [
+        {
+            "us-east-2": [
+                {
+                    "s3bucket": "us-east-2.example.s3-bucket"
+                }
+            ]
+        },
+        {
+            "us-west-1": [
+                {
+                    "s3bucket": "us-west-1.example.s3-bucket"
+                }
+            ]
+        },
+        {
+            "us-west-2": [
+                {
+                    "s3bucket": "us-west-2.example.s3-bucket"
+                }
+            ]
+        },
+        {
+            "ca-central-1": [
+                {
+                    "s3bucket": "ca-central-1.example.s3-bucket"
+                }
+            ]
+        }
+    ]
+}
