@@ -51,14 +51,14 @@ def lambda_handler(event, context):
                         sub_config_list=config["srcBucket"],
                         unique_dict_of_boto3_clients=dict_of_boto3_clients
                     )
-                )
-                dict_of_boto3_clients.update(
-                    utils.get_unique_dict_of_boto3_clients_from_config(
-                        sub_config_list=config["dstBucket"],
-                        unique_dict_of_boto3_clients=dict_of_boto3_clients
-                    )
-                )
-                logger.debug("Dictionary of boto3 clients for every region - " + str(dict_of_boto3_clients))
+                )        
+                # dict_of_boto3_clients.update(
+                #     utils.get_unique_dict_of_boto3_clients_from_config(
+                #         sub_config_list=config["dstBucket"],
+                #         unique_dict_of_boto3_clients=dict_of_boto3_clients
+                #     )
+                # )
+                logger.debug("Dictionary of boto3 clients for source regions to initiate copy_object - " + str(dict_of_boto3_clients))
 
                 for src_bucket_region in config["srcBucket"]:
 
@@ -67,16 +67,16 @@ def lambda_handler(event, context):
 
                     for src_bucket in src_bucket_region[src_bucket_region_name]:
 
-                        logger.debug("Source S3 Bucket: " + src_bucket["s3bucket"])
+                        logger.debug("Source S3 Bucket: " + src_bucket["s3Bucket"])
 
                         for s3_object in src_bucket["objects"]:
 
                             if s3_copy_files.check_s3_object_exists(
                                 s3_client=dict_of_boto3_clients[src_bucket_region_name],
-                                bucket_name=src_bucket["s3bucket"],
-                                object_key=s3_object["s3prefix"] + s3_object["filename"]
+                                bucket_name=src_bucket["s3Bucket"],
+                                object_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
                             ):
-                                logger.info("Object " + s3_object["filename"] + " exists.")
+                                logger.info("Object " + s3_object["s3Key"] + " exists.")
 
                                 for dst_bucket_region in config["dstBucket"]:
 
@@ -84,20 +84,20 @@ def lambda_handler(event, context):
 
                                     for dst_bucket in dst_bucket_region[dst_bucket_region_name]:
 
-                                        logger.debug("Destination S3 Bucket: " + dst_bucket["s3bucket"])
+                                        logger.debug("Destination S3 Bucket: " + dst_bucket["s3Bucket"])
 
-                                        logger.info("Copying " + s3_object["s3prefix"] + s3_object["filename"] + " from " + src_bucket["s3bucket"] + " to " + dst_bucket["s3bucket"])
+                                        logger.info("Copying " + s3_object["s3KeyPrefix"] + s3_object["s3Key"] + " from " + src_bucket["s3Bucket"] + " to " + dst_bucket["s3Bucket"])
 
                                         s3_copy_files.s3_copy(
                                             s3_client=dict_of_boto3_clients[src_bucket_region_name],
-                                            src_bucket=src_bucket["s3bucket"],
-                                            src_key=s3_object["s3prefix"] + s3_object["filename"],
-                                            dst_bucket=dst_bucket["s3bucket"],
-                                            dst_key=s3_object["s3prefix"] + s3_object["filename"]
+                                            src_bucket=src_bucket["s3Bucket"],
+                                            src_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"],
+                                            dst_bucket=dst_bucket["s3Bucket"],
+                                            dst_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
                                         )
 
                             else:
-                                logger.error("Object " + s3_object["filename"] + " does not exist.")
+                                logger.error("Object " + s3_object["s3Key"] + " does not exist.")
 
         except Exception as e:
             logger.error("Unhandled Error: " + str(e))
