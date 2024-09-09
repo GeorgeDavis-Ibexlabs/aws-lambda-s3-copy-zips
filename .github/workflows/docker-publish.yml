@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: georgedavisibexlabs/generate-cf-params-file
+          images: georgedavisibexlabs/aws-lambda-s3-copy-zips
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.6.1
@@ -53,8 +53,8 @@ jobs:
         with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-            repository: georgedavisibexlabs/generate-cf-params-file
-            short-description: Parse CloudFormation and generate Parameters file
+            repository: georgedavisibexlabs/aws-lambda-s3-copy-zips
+            short-description: Using GitHub Actions to copy AWS Lambda zip files across S3 buckets
             readme-filepath: ./DOCKER.md
             enable-url-completion: true
 
@@ -62,7 +62,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.24.0
         with:
           scan-type: 'image'
-          image-ref: 'georgedavisibexlabs/generate-cf-params-file'
+          image-ref: 'georgedavisibexlabs/aws-lambda-s3-copy-zips'
           limit-severities-for-sarif: true
           trivy-config: .github/config/trivy-sarif.yaml
     
