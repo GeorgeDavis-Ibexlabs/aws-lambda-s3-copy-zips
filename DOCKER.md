@@ -17,14 +17,14 @@ This Python script copies S3 objects from mutliple S3 source buckets to multiple
 
 ## Configuration
 
-| `config.json` file | Config as Environment variable(s) | Description |
+| config.json file | Config as Environment variable(s) | Description |
 |---------------|-----------------------------|-------------|
 | `srcBucket` | `SRC_BUCKET` | In JSON, this is an list of source regions and buckets in those regions. When using environment variable `SRC_BUCKET`, this is the name of the source S3 bucket |
-| :x: | `SRC_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the source S3 bucket |
-| :x: | `SRC_KEY_PREFIX` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the prefix of the S3 object from the root of the S3 bucket |
-| :x: | `SRC_KEY` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the name of the S3 object that needs to be copied |
+| X | `SRC_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the source S3 bucket |
+| X | `SRC_KEY_PREFIX` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the prefix of the S3 object from the root of the S3 bucket |
+| X | `SRC_KEY` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the name of the S3 object that needs to be copied |
 | `dstBucket` | `DST_BUCKET` | In JSON, this is an list of destination regions and buckets in those regions. When using environment variable `DST_BUCKET`, this is the name of the destination S3 bucket |
-| :x: | `DST_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the destination S3 bucket |
+| X | `DST_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the destination S3 bucket |
 
 # Compatibility
 
