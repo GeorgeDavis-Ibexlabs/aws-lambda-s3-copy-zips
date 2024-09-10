@@ -59,17 +59,11 @@ jobs:
             readme-filepath: ./DOCKER.md
             enable-url-completion: true
 
-      - name: Debug
-        run: |
-          echo ${{ steps.image.outputs.metadata }}
-          echo ${{ steps.image.outputs.imageid }}
-          echo ${{ steps.image.outputs.digest }}
-
       - name: Run Trivy Image scanner
         uses: aquasecurity/trivy-action@0.24.0
         with:
           scan-type: 'image'
-          image-ref: '${{ steps.image.outputs.imageid }}:${{ steps.image.outputs.digest }}'
+          image-ref: '${{ steps.image.outputs.imageid }}'
           limit-severities-for-sarif: true
           trivy-config: .github/config/trivy-sarif.yaml
     
