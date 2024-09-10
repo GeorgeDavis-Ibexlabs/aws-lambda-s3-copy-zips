@@ -40,6 +40,7 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.6.1
+        id: image
         with:
           context: .
           file: Dockerfile
@@ -62,7 +63,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.24.0
         with:
           scan-type: 'image'
-          image-ref: 'georgedavisibexlabs/aws-lambda-s3-copy-zips'
+          image-ref: '${{ steps.image.outputs.imageid }}:${{ steps.image.outputs.digest }}'
           limit-severities-for-sarif: true
           trivy-config: .github/config/trivy-sarif.yaml
     
