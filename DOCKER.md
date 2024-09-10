@@ -10,10 +10,19 @@ This Python script copies S3 objects from mutliple S3 source buckets to multiple
 
 # Usage
 
-1. Run Docker container using
-`docker run --network host -itd aws-lambda-s3-copy-zips:latest`
-2. To configure the source and destination buckets and which objects get copied, copy the `config.json.example` file into `config.json`. For more information on the configuration variables available to you, refer the Configuration section of the documentation.
-3. (Optional) Alternatively you could use environment variables to configure the script but it is limited to 1 source bucket and 1 destination bucket. TODO: Multiple destination buckets.
+1. To configure the source and destination buckets and which objects get copied, copy the `config.json.example` file into `config.json`. For more information on the configuration variables available to you, refer the Configuration section of the documentation.
+2. (Optional) Alternatively you could use environment variables to configure the script but it is limited to 1 source bucket and 1 destination bucket. TODO: Multiple destination buckets.
+3. Run Docker container using
+```sh
+docker run --network host -itd -e LOGLEVEL=DEBUG \
+-e SRC_REGION=<region-of-source-bucket> \
+-e SRC_BUCKET=<source-s3-bucket-name> \ 
+-e SRC_KEY_PREFIX=<key-prefix-of-source-s3-object> \
+-e SRC_KEY=<key-of-source-s3-object> \
+-e DST_REGION=<region-of-destination-bucket> \
+-e DST_BUCKET=<destination-s3-bucket-name> \
+aws-lambda-s3-copy-zips:latest
+```
 
 ## Configuration
 
@@ -67,6 +76,12 @@ docker build --no-cache --progress=plain . -f Dockerfile -t aws-lambda-s3-copy-z
 ```sh
 docker run --network host -itd \
 -e LOGLEVEL='DEBUG' \
+-e SRC_REGION='<region-of-source-bucket>' \
+-e SRC_BUCKET='<source-s3-bucket-name>' \
+-e SRC_KEY_PREFIX='<key-prefix-of-source-s3-object>' \
+-e SRC_KEY='<key-of-source-s3-object>' \
+-e DST_REGION='<region-of-destination-bucket>' \
+-e DST_BUCKET='<destination-s3-bucket-name>' \
 aws-lambda-s3-copy-zips:latest
 ```
 
