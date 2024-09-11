@@ -59,14 +59,6 @@ jobs:
             readme-filepath: ./DOCKER.md
             enable-url-completion: true
 
-      - name: Docker Images
-        run: |
-          docker images --no-trunc
-
-      - name: Docker Build Output
-        run: |
-          echo "Image ID - ${{ steps.built_image.outputs.imageid }}"
-
       - name: Run Trivy Image scanner
         uses: aquasecurity/trivy-action@0.24.0
         with:
