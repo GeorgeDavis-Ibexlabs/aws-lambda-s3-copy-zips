@@ -40,7 +40,6 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.6.1
-        id: built_image
         with:
           context: .
           file: Dockerfile
