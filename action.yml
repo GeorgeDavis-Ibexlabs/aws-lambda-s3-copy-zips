@@ -1,6 +1,6 @@
 ---
-name: 'Copy AWS Lambda zip files across S3 buckets'
-description: 'Copy AWS Lambda zip files across S3 buckets using GitHub Actions and Python boto3 library'
+name: 'Copy files across S3 buckets, primarily AWS Lambda zip files'
+description: 'Copy files across S3 buckets using GitHub Actions and Python boto3 library'
 author: 'GeorgeDavis-Ibexlabs'
 inputs:
   SRC_REGION:

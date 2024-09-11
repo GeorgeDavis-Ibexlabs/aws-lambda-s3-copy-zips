@@ -1,6 +1,6 @@
 # aws-lambda-s3-copy-zips
 
-Using GitHub Actions and Python to copy AWS Lambda zip files across S3 buckets
+Using GitHub Actions and Python to copy files across S3 buckets, primarily AWS Lambda zip files
 
 Project Status: **Stable**
 
@@ -46,10 +46,10 @@ aws-lambda-s3-copy-zips:latest
 ## GitHub Actions
 
 ```
-    - name: Copy AWS Lambda zip file from 1:1 S3 bucket
+    - name: Copy files from 1:1 S3 bucket
       uses: GeorgeDavis-Ibexlabs/aws-lambda-s3-copy-zips@v0.0.1
 ```
-Refer to [Copy AWS Lambda zip files across S3 buckets using GitHub Actions](https://github.com/marketplace/actions/aws-lambda-s3-copy-zips)
+Refer to [Copy files across S3 buckets using GitHub Actions](https://github.com/marketplace/actions/aws-lambda-s3-copy-zips)
 
 # Issues?
 

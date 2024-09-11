@@ -54,7 +54,7 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
             repository: georgedavisibexlabs/aws-lambda-s3-copy-zips
-            short-description: Using GitHub Actions to copy AWS Lambda zip files across S3 buckets
+            short-description: Using GitHub Actions to copy files across S3 buckets, primarily AWS Lambda zip files
             readme-filepath: ./DOCKER.md
             enable-url-completion: true
 
