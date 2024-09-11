@@ -41,7 +41,7 @@ aws-lambda-s3-copy-zips:latest
 |-------|------|
 | `GitHub Actions` | :white_check_mark: |
 | `Docker` (local) | :white_check_mark: |
-| `CLI` | :construction: Needs Docker/Python |
+| `CLI` | :white_check_mark: (Needs Docker/Python) |
 
 ## GitHub Actions
 
