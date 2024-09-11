@@ -28,11 +28,11 @@ aws-lambda-s3-copy-zips:latest
 
 | config.json file | Config as Environment variable(s) | Description |
 |---------------|-----------------------------|-------------|
-| `srcBucket` | `SRC_BUCKET` | In JSON, this is an list of source regions and buckets in those regions. When using environment variable `SRC_BUCKET`, this is the name of the source S3 bucket |
+| `srcBucket` | `SRC_BUCKET` | In JSON, this is an list of source regions and buckets in those regions. When using environment variable `SRC_BUCKET` is limited to using only 1 region per run. This is the name of the source S3 bucket |
 | X | `SRC_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the source S3 bucket |
 | X | `SRC_KEY_PREFIX` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the prefix of the S3 object from the root of the S3 bucket |
 | X | `SRC_KEY` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the name of the S3 object that needs to be copied |
-| `dstBucket` | `DST_BUCKET` | In JSON, this is an list of destination regions and buckets in those regions. When using environment variable `DST_BUCKET`, this is the name of the destination S3 bucket |
+| `dstBucket` | `DST_BUCKET` | In JSON, this is an list of destination regions and buckets in those regions. When using environment variable `DST_BUCKET` is limited to using only 1 region per run. The value can be a comma-separated value string of the names of the destination S3 buckets within the same region |
 | X | `DST_REGION` | Only available when the script falls back to  environment variables in the absence of a `config.json` file. This is the region of the destination S3 bucket |
 
 # Compatibility
@@ -46,7 +46,7 @@ aws-lambda-s3-copy-zips:latest
 ## GitHub Actions
 
 ```
-    - name: Copy files from 1:1 S3 bucket
+    - name: Copy files across S3 buckets
       uses: GeorgeDavis-Ibexlabs/aws-lambda-s3-copy-zips@v0.0.1
 ```
 Refer to [Copy files across S3 buckets using GitHub Actions](https://github.com/marketplace/actions/aws-lambda-s3-copy-zips)
