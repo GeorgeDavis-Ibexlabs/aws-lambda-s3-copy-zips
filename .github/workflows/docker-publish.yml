@@ -51,12 +51,12 @@ jobs:
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v4.0.0
         with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-            repository: georgedavisibexlabs/aws-lambda-s3-copy-zips
-            short-description: Using GitHub Actions to copy files across S3 buckets, primarily AWS Lambda zip files
-            readme-filepath: ./DOCKER.md
-            enable-url-completion: true
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: georgedavisibexlabs/aws-lambda-s3-copy-zips
+          short-description: Using GitHub Actions to copy files across S3 buckets, primarily AWS Lambda zip files
+          readme-filepath: ./DOCKER.md
+          enable-url-completion: true
 
       - name: Run Trivy Image scanner
         uses: aquasecurity/trivy-action@0.24.0
