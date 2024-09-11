@@ -1,0 +1,29 @@
+---
+name: 'Copy AWS Lambda zip files across S3 buckets'
+description: 'Copy AWS Lambda zip files across S3 buckets using GitHub Actions and Python boto3 library'
+author: 'GeorgeDavis-Ibexlabs'
+inputs:
+  SRC_REGION:
+    description: 'This is the region of the source S3 bucket'  
+    required: true
+  SRC_BUCKET:
+    description: 'This is the name of the source S3 bucket'  
+    required: true
+  SRC_KEY_PREFIX:
+    description: 'This is the prefix of the S3 object from the root of the S3 bucket'  
+    required: true
+  SRC_KEY:
+    description: 'This is the name of the S3 object that needs to be copied'  
+    required: true
+  DST_REGION:
+    description: 'This is the region of the destination S3 bucket'  
+    required: true
+  DST_BUCKET:
+    description: 'This is the name of the destination S3 bucket'  
+    required: true
+branding:
+  icon: 'copy'
+  color: 'orange'
+runs:
+  using: 'docker'
+  image: 'docker://georgedavisibexlabs/aws-lambda-s3-copy-zips:latest'
