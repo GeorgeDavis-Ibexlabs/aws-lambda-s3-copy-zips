@@ -33,6 +33,22 @@ class ConfigHandler():
     def build_config(self, config_dict: dict) -> dict:
 
         self.logger.debug('Config Dict - ' + str(config_dict))
+        
+        dst_bucket_list = []
+
+        if ',' in config_dict['DST_BUCKET']:
+
+            dst_bucket = config_dict['DST_BUCKET'].split(',')
+            for bucket in dst_bucket:
+                if bucket != '':
+                    dst_bucket_list.append({
+                        's3Bucket': bucket
+                    })
+        else:
+            dst_bucket_list = [{
+                's3Bucket': config_dict['DST_BUCKET']
+            }]
+
         return {
             'srcBucket': [
                 {
@@ -51,11 +67,7 @@ class ConfigHandler():
             ],
             'dstBucket': [
                 {
-                    config_dict['DST_REGION']: [
-                        {
-                            's3Bucket': config_dict['DST_BUCKET']
-                        }
-                    ]
+                    config_dict['DST_REGION']: dst_bucket_list
                 }
             ]
         }
@@ -141,8 +153,8 @@ class ConfigHandler():
         except Exception as e:
             self.logger.error('Error loading environment variables: ' + str(traceback.print_tb(e.__traceback__)))
             
-    # get_combined_config: Get config from config file. If empty, check for config within environment variables. Returns dict
-    def get_combined_config(self) -> dict:
+    # get_config: Get config from config file. If empty, check for config within environment variables. Returns dict
+    def get_config(self) -> dict:
 
         try:
             # Build a config file using config.json if it exists    

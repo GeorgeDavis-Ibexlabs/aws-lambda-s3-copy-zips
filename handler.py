@@ -20,8 +20,8 @@ if 'BOTOCORE_LOGLEVEL' in environ.keys():
 
 from config_handler.config_handler import ConfigHandler
 config_handler = ConfigHandler(logger=logger)
-config = config_handler.get_combined_config()
-logger.debug("Final combined config - " + str(config))
+config = config_handler.get_config()
+logger.debug("Final config - " + str(config))
 
 from utils.utils import Utils
 utils = Utils(logger=logger, config=config)
