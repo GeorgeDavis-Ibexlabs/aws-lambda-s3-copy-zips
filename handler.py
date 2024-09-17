@@ -5,8 +5,19 @@ import traceback
 import boto3
 
 # Setting up the logging level from the environment variable `LOGLEVEL`.
-logging.basicConfig()
-logger = logging.getLogger(__name__)
+if 'LOG_FILENAME' in environ.keys():
+    logging.basicConfig(
+        filename=environ['LOG_FILENAME'],
+        filemode='a',
+        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+        datefmt='%H:%M:%S',
+        level=logging.DEBUG
+    )
+    logger = logging.getLogger(__name__)
+else:
+    logging.basicConfig()
+    logger = logging.getLogger(__name__)
+
 logger.setLevel(environ['LOGLEVEL'] if 'LOGLEVEL' in environ.keys() else 'INFO')
 
 # Setting up logging level specific to `botocore` from the environment variable `BOTOCORE_LOGLEVEL`.
