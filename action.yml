@@ -21,6 +21,14 @@ inputs:
   DST_BUCKET:
     description: 'This is the name of the destination S3 bucket'  
     required: true
+  LOGLEVEL:
+    description: 'Python logging level. Default: INFO'
+    required: false
+    default: INFO
+  BOTOCORE_LOGLEVEL:
+    description: 'Botocore logging level. Default: INFO'
+    required: false
+    default: INFO
 branding:
   icon: 'copy'
   color: 'orange'
