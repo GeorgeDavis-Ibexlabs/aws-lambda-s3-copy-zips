@@ -1,6 +1,5 @@
 import logging
 from os import environ
-import cfnresponse
 import traceback
 import boto3
 
@@ -39,87 +38,73 @@ utils = Utils(logger=logger, config=config)
 from s3.s3 import s3CopyFiles
 s3_copy_files = s3CopyFiles(logger=logger, config=config)
 
-# lambda_handler: This script executes as a Custom Resource to copy files across S3 buckets and regions. The script is executed if the stack was created, updated or removed.
-def lambda_handler(event, context):
+# main: This script executes as a Custom Resource to copy files across S3 buckets and regions. The script is executed if the stack was created, updated or removed.
+def main():
 
     logger.debug('Environment variables - ' + str(environ))
+    logger.debug("Config - " + str(config))
 
-    # Create or Update Stack - The following section gets executed when the deployed stack is created or updated using AWS CloudFormation.
-    if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
-        
-        logger.info(str(event['RequestType']) + ' Stack Event - ' + str(event))
+    try:
 
-        logger.debug("Config - " + str(config))
+        if config is not None:
 
-        try:
+            dict_of_boto3_clients = {}
+            dict_of_boto3_clients.update(
+                utils.get_unique_dict_of_boto3_clients_from_config(
+                    sub_config_list=config["srcBucket"],
+                    unique_dict_of_boto3_clients=dict_of_boto3_clients
+                )
+            )        
+            # dict_of_boto3_clients.update(
+            #     utils.get_unique_dict_of_boto3_clients_from_config(
+            #         sub_config_list=config["dstBucket"],
+            #         unique_dict_of_boto3_clients=dict_of_boto3_clients
+            #     )
+            # )
+            logger.debug("Dictionary of boto3 clients for source regions to initiate copy_object - " + str(dict_of_boto3_clients))
 
-            if config is not None:
+            for src_bucket_region in config["srcBucket"]:
 
-                dict_of_boto3_clients = {}
-                dict_of_boto3_clients.update(
-                    utils.get_unique_dict_of_boto3_clients_from_config(
-                        sub_config_list=config["srcBucket"],
-                        unique_dict_of_boto3_clients=dict_of_boto3_clients
-                    )
-                )        
-                # dict_of_boto3_clients.update(
-                #     utils.get_unique_dict_of_boto3_clients_from_config(
-                #         sub_config_list=config["dstBucket"],
-                #         unique_dict_of_boto3_clients=dict_of_boto3_clients
-                #     )
-                # )
-                logger.debug("Dictionary of boto3 clients for source regions to initiate copy_object - " + str(dict_of_boto3_clients))
+                src_bucket_region_name = list(src_bucket_region.keys())[0]
+                logger.debug("Creating a boto3 client for " + src_bucket_region_name)
 
-                for src_bucket_region in config["srcBucket"]:
+                for src_bucket in src_bucket_region[src_bucket_region_name]:
 
-                    src_bucket_region_name = list(src_bucket_region.keys())[0]
-                    logger.debug("Creating a boto3 client for " + src_bucket_region_name)
+                    logger.debug("Source S3 Bucket: " + src_bucket["s3Bucket"])
 
-                    for src_bucket in src_bucket_region[src_bucket_region_name]:
+                    for s3_object in src_bucket["objects"]:
 
-                        logger.debug("Source S3 Bucket: " + src_bucket["s3Bucket"])
+                        if s3_copy_files.check_s3_object_exists(
+                            s3_client=dict_of_boto3_clients[src_bucket_region_name],
+                            bucket_name=src_bucket["s3Bucket"],
+                            object_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
+                        ):
+                            logger.info("Object " + s3_object["s3Key"] + " exists.")
 
-                        for s3_object in src_bucket["objects"]:
+                            for dst_bucket_region in config["dstBucket"]:
 
-                            if s3_copy_files.check_s3_object_exists(
-                                s3_client=dict_of_boto3_clients[src_bucket_region_name],
-                                bucket_name=src_bucket["s3Bucket"],
-                                object_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
-                            ):
-                                logger.info("Object " + s3_object["s3Key"] + " exists.")
+                                dst_bucket_region_name = list(dst_bucket_region.keys())[0]
 
-                                for dst_bucket_region in config["dstBucket"]:
+                                for dst_bucket in dst_bucket_region[dst_bucket_region_name]:
 
-                                    dst_bucket_region_name = list(dst_bucket_region.keys())[0]
+                                    logger.debug("Destination S3 Bucket: " + dst_bucket["s3Bucket"])
 
-                                    for dst_bucket in dst_bucket_region[dst_bucket_region_name]:
+                                    logger.info("Copying " + s3_object["s3KeyPrefix"] + s3_object["s3Key"] + " from " + src_bucket["s3Bucket"] + " to " + dst_bucket["s3Bucket"])
 
-                                        logger.debug("Destination S3 Bucket: " + dst_bucket["s3Bucket"])
+                                    s3_copy_files.s3_copy(
+                                        s3_client=dict_of_boto3_clients[src_bucket_region_name],
+                                        src_bucket=src_bucket["s3Bucket"],
+                                        src_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"],
+                                        dst_bucket=dst_bucket["s3Bucket"],
+                                        dst_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
+                                    )
 
-                                        logger.info("Copying " + s3_object["s3KeyPrefix"] + s3_object["s3Key"] + " from " + src_bucket["s3Bucket"] + " to " + dst_bucket["s3Bucket"])
+                        else:
+                            logger.error("Object " + s3_object["s3Key"] + " does not exist.")
 
-                                        s3_copy_files.s3_copy(
-                                            s3_client=dict_of_boto3_clients[src_bucket_region_name],
-                                            src_bucket=src_bucket["s3Bucket"],
-                                            src_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"],
-                                            dst_bucket=dst_bucket["s3Bucket"],
-                                            dst_key=s3_object["s3KeyPrefix"] + s3_object["s3Key"]
-                                        )
+    except Exception as e:
+        logger.exception("Unhandled Error: " + str(traceback.print_tb(e.__traceback__)))
+        raise
 
-                            else:
-                                logger.error("Object " + s3_object["s3Key"] + " does not exist.")
-
-        except Exception as e:
-            logger.error("Unhandled Error: " + str(e))
-            raise
-
-    # Delete Stack - The following section gets executed when the deployed stack is deleted from AWS CloudFormation.
-    elif event['RequestType'] == 'Delete':
-
-        try:
-            logger.info('Delete Stack Event - ' + str(event))            
-
-        # Handling `cfnresponse` error response when the stack is deleted but there is an exception in calling the API. 
-        except Exception as e:
-            logger.error('Delete Stack Error - ' + str(traceback.print_tb(e.__traceback__)))
-            cfnresponse.send(event, context, cfnresponse.FAILED, {})
+if __name__ == '__main__':
+    main()
