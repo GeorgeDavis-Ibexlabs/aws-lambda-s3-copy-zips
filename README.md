@@ -47,7 +47,7 @@ aws-lambda-s3-copy-zips:latest
 
 ```
     - name: Copy files across S3 buckets
-      uses: GeorgeDavis-Ibexlabs/aws-lambda-s3-copy-zips@v0.0.1
+      uses: GeorgeDavis-Ibexlabs/aws-lambda-s3-copy-zips@v0.0.5
 ```
 Refer to [Copy files across S3 buckets using GitHub Actions](https://github.com/marketplace/actions/aws-lambda-s3-copy-zips)
 
